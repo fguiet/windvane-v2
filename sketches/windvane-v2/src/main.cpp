@@ -24,7 +24,7 @@ Winvane
 #include <PubSubClient.h>
 
 #define DEBUG 0
-#define MAX_RETRY 500
+#define MAX_RETRY 700
 #define MQTT_CLIENT_ID "WindvaneSensor"
 #define FIRMWARE_VERSION "1.0"
 
@@ -35,7 +35,9 @@ const int PIN_LINE4 = 2;
 const int PIN_LINE5 = 4;
 const int SAMPLES = 5;
 const int SAMPLES_FREQUENCY = 2000;  //10s = 10000
-//const int DEEP_SLEEP_S = 900;  //900s = 15min
+
+//DEBUG PURPOSE
+//const int DEEP_SLEEP_S = 5;  //900s = 15min
 const int DEEP_SLEEP_S = 900;  //900s = 15min
 
 const int PIN_PHOTOTRANSISTOR_LED_ONOFF = 5;
@@ -45,7 +47,8 @@ const int ANALOG_PIN = A0;
 WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 
-String directions[] = { "North", "North-East", "East" ,"South-East", "South", "South-West", "West", "North-West"};
+//String directions[] = { "North", "North-East", "East" ,"South-East", "South", "South-West", "West", "North-West"};
+String directions[] = { "South", "South-West", "West" ,"North-West", "North", "North-East", "East", "South-East"};
 
 unsigned long last_millis = 0;
 int counter = 0;
@@ -241,14 +244,14 @@ void disconnectWifi() {
 
 String getDirection(int position) {
 
-  if (position==15 || position==5 || position==3) return directions[0]; //North
-  if (position==1 || position==17 || position==19) return directions[1]; //North-East
-  if (position==23 || position==22 || position==18) return directions[2]; //East
-  if (position==16 || position==24 || position==27) return directions[3]; //South-East
-  if (position==9 || position==8 || position==12) return directions[4]; //South
-  if (position==29 || position==21) return directions[5]; //South-West
-  if (position==20 || position==6 || position==4 || position==30 || position==14) return directions[6]; //West
-  if (position==26 || position==10 || position==2) return directions[7]; //North-West  
+  if (position==15 || position==5 || position==3 || position==13) return directions[0]; //South
+  if (position==1 || position==17 || position==19) return directions[1]; //South-West
+  if (position==23 || position==22 || position==18) return directions[2]; //West
+  if (position==16 || position==24 || position==27) return directions[3]; //North-West
+  if (position==9 || position==8 || position==12) return directions[4]; //North
+  if (position==29 || position==21) return directions[5]; //North-East
+  if (position==20 || position==6 || position==4 || position==14) return directions[6]; //East
+  if (position==26 || position==10 || position==2 || position==30) return directions[7]; //South-East
 
   return "Unknown";
 }
@@ -367,7 +370,8 @@ void loop() {
   }
 
   //For testing purpose
-  //return;
+  //if (DEBUG)
+  //  return;
 
   if (counter >= SAMPLES) {
 
